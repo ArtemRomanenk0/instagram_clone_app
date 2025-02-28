@@ -28,7 +28,7 @@
 ### 1. Клонируйте репозиторий
 `bash
 - https://github.com/ArtemRomanenk0/instagram_clone_app.git
-cd instagram_clone 
+- cd instagram_clone 
 
 ### 2. Установите зависимости
 `bash
