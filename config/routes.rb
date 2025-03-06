@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       delete '/logout', to: 'auth#logout'
 
       # Posts with search
-      resources :posts, only: [:index, :show, :new, :create, :update, :destroy] do
+      resources :posts, only: [:index, :show, :create, :update, :destroy] do
         collection do
            get :search
           end
