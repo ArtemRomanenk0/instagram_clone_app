@@ -5,7 +5,9 @@
     <%= button_to 'Отписаться', user_subscription_path(@user), method: :delete, class: 'btn btn-danger' %>
   <% else %>
     <%= button_to 'Подписаться', user_subscriptions_path(@user), method: :post, class: 'btn btn-primary' %>
-  <% end %>
+<% end %>
+<% else %>
+  <%= link_to 'Войдите', new_user_session_path %> чтобы подписаться.
 <% end %>
 
 <%= link_to 'Назад', root_path, class: 'btn btn-secondary' %>

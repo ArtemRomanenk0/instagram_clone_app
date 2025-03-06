@@ -1,21 +1,34 @@
 Rails.application.routes.draw do
-  get "subscriptions/create"
-  get "subscriptions/destroy"
-  get "posts/index"
-  get "posts/new"
-  get "posts/create"
-  get "posts/show"
-
-
-
+  # Web routes
   devise_for :users
-resources :posts
-resources :users, only: [:show] do
-  resources :subscriptions, only: [:create, :destroy]
+  resources :posts
+  resources :users, only: [:show] do
+    resources :subscriptions, only: [:create, :destroy]
+  end
+  get '/search', to: 'search#posts', as: :search_posts
+  root 'posts#index'
 
+  # API routes
+  namespace :api do
+    namespace :v1 do
+      # Authentication
+      post '/login', to: 'auth#login'
+      delete '/logout', to: 'auth#logout'
 
-end
-get '/search', to: 'search#posts', as: :search_posts
-root 'posts#index'
+      # Posts with search
+      resources :posts, only: [:index, :show, :new, :create, :update, :destroy] do
+        collection do
+           get :search
+          end
+      end
 
+      # Users with follow/unfollow
+      resources :users, only: [:index, :show] do
+        member do
+          post :follow
+          delete :unfollow
+        end
+      end
+    end
+  end
 end

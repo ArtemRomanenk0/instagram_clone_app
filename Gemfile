@@ -8,6 +8,10 @@ gem "propshaft"
 gem "mysql2", "~> 0.5"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+gem 'rack-cors'
+gem 'active_model_serializers'
+
+gem 'rack-attack'
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
@@ -18,6 +22,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 gem 'devise'
+gem 'devise-jwt'
+
 gem 'carrierwave'
 gem 'mini_magick' # для обработки изображений
 
