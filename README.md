@@ -22,45 +22,26 @@
 - MySQL** (база данных)
 
 ---
+## Запуск через Docker
 
-## Установка
+1. Установите Docker и Docker Compose.
+2. Склонируйте репозиторий:
+   ```bash
+   git clone https://github.com/ArtemRomanenk0/instagram_clone_app
+   cd instagram_clone_app
+3. Соберите и запустите контейнеры:
+   ```bash 
+   docker-compose up --build
+4. Выполните миграции (в новом терминале):
+   ```bash
+   docker-compose run web rails db:migrate
+5. Приложение доступно по адресу: http://localhost:3000
+6. Отановить проект:
+   docker-compose down
+---
 
-### 1. Клонируйте репозиторий
-`bash
-- https://github.com/ArtemRomanenk0/instagram_clone_app.git
-- cd instagram_clone 
+## Использование
 
-### 2. Установите зависимости
-`bash
-- bundle install
- 
-### 3. Настройте базу данных
- #### 1. Создайте базу данных MySQL:
-`bash
--sudo mysql -u root -p
--CREATE DATABASE instagram_clone_development;
-
- #### 2. Обновите config/database.yml:
-`yaml
-   - default: &default
-      adapter: mysql2
-      encoding: utf8mb4
-      username: ваш_логин_mysql
-      password: ваш_пароль_mysql
-      socket: /var/run/mysqld/mysqld.sock
-
-### 4. Выполните миграции
-`bash
-- rails db:migrate
-
-### 5. Запустите сервер
-`bash
-- rails server
-
-- Откройте в браузере: http://localhost:3000.
-
-
-Использование
 Регистрация
 
    - Перейдите по ссылке "Регистрация".
