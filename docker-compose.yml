@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: instagram_clone_development 
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app_password
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 10   
+    volumes:
+      - mysql_data:/var/lib/mysql 
+        
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: artemromanenk0/instagram_clone:latest 
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql2://app:app_password@db/instagram_clone_development
+      RAILS_ENV: development
+    entrypoint: ["/bin/sh", "/app/docker-entrypoint.sh"]
+    networks:
+     - app-network
+
+networks:
+  app-network:  
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.20.0.0/24  
+          gateway: 10.20.0.1
+        
+volumes:
+  mysql_data:

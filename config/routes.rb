@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  # Web routes
+ # Web routes
   devise_for :users
   resources :posts
   resources :users, only: [:show] do

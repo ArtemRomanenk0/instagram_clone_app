@@ -53,9 +53,23 @@ Rails.application.configure do
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 
+ # Разрешаем куки для localhost и Docker-сети
+config.session_store :cookie_store,
+  key: '_instagram_clone_session',
+  domain: :all, # Явное указание домена
+  same_site: :lax,
+  secure: false
+
+# Доверяем Docker-прокси
+config.action_dispatch.trusted_proxies = [
+  IPAddr.new("172.18.0.0/16"), # Подсеть Docker
+  IPAddr.new("127.0.0.0/8")
+] 
+ 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+ 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
