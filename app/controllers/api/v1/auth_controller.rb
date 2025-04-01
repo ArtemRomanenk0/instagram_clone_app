@@ -3,21 +3,16 @@ class Api::V1::AuthController < Api::V1::BaseController
   before_action :verify_logged_out, only: [:login]
 
   def login
-    logger.info "Login attempt with params: #{params.permit!}"
-    
-    user = User.find_for_database_authentication(email: params[:email])
-    logger.info "Found user: #{user.inspect}"
-
-    if user&.valid_password?(params[:password])
-      logger.info "Password valid for user #{user.id}"
-      user.regenerate_authentication_token!
-      render json: {
-        token: user.authentication_token,
-        user_id: user.id,
-        email: user.email
-      }, status: :ok
+    return render json: { error: "Параметры отсутствуют" }, status: :bad_request unless params[:user]
+  
+    email = params[:user][:email]&.downcase
+    password = params[:user][:password]
+  
+    user = User.find_by(email: email)
+    if user&.valid_password?(password)
+      render json: { token: user.authentication_token }
     else
-      render json: { error: "Invalid credentials" }, status: :unauthorized
+      render json: { error: "Неверный email или пароль" }, status: :unauthorized
     end
   end
 
@@ -31,6 +26,10 @@ class Api::V1::AuthController < Api::V1::BaseController
   end
 
   private
+
+  def render_unauthorized
+    render json: { error: "Email and password are required" }, status: :bad_request
+  end
 
   def verify_logged_out
     return unless current_user

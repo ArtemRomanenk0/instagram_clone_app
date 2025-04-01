@@ -1,11 +1,14 @@
 class Api::V1::PostsController < Api::V1::BaseController
   def index
-    posts = current_user.feed_posts.order(created_at: :desc)
+    posts = Post.includes(:user).order(created_at: :desc)
     render json: posts, each_serializer: PostSerializer
   end
-def search
-    @posts = Post.where("text LIKE ?", "%#{params[:query]}%")
-    render json: @posts
+  def search
+    posts = Post.where("text LIKE ?", "%#{params[:query]}%")
+               .includes(:user)
+               .order(created_at: :desc)
+    
+    render json: posts, each_serializer: PostSerializer
   end
 def show
     post = Post.find(params[:id])

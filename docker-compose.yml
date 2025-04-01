@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+      - frontend
+    networks:
+      - app-network
+
   db:
     image: mysql:8.0
     environment:
@@ -17,32 +29,40 @@ services:
       retries: 10   
     volumes:
       - mysql_data:/var/lib/mysql 
-        
+
   web:
     build: 
       context: .
       dockerfile: Dockerfile
     image: artemromanenk0/instagram_clone:latest 
     restart: always
+    volumes:
+      - ./public:/app/public
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "3000:3000"
     environment:
       DATABASE_URL: mysql2://app:app_password@db/instagram_clone_development
       RAILS_ENV: development
     entrypoint: ["/bin/sh", "/app/docker-entrypoint.sh"]
     networks:
-     - app-network
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost/api # Через Nginx
+      NODE_ENV: production
+    networks:
+      - app-network
+    depends_on:
+      - web
 
 networks:
   app-network:  
     driver: bridge
-    ipam:
-      config:
-        - subnet: 10.20.0.0/24  
-          gateway: 10.20.0.1
-        
+
 volumes:
   mysql_data:
