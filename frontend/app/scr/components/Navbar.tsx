@@ -5,18 +5,21 @@ import {
   Button, 
   Spacer, 
   Link,
-  useColorModeValue 
+  useColorModeValue, 
+  Text
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useEffect, useState } from 'react';
+
 
 export default function Navbar() {
   const bg = useColorModeValue('white', 'gray.800')
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('token'));
+    setIsLoggedIn(!!localStorage.getItem('authToken'));
   }, []);
   
+
   return (
     <Flex 
       as="nav" 
@@ -34,7 +37,7 @@ export default function Navbar() {
       {isLoggedIn ? (
         <Button 
           onClick={() => {
-            localStorage.removeItem('token');
+            localStorage.removeItem('authToken');
             window.location.href = '/login';
           }}
           colorScheme="brand"

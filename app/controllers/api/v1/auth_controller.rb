@@ -19,7 +19,7 @@ class Api::V1::AuthController < Api::V1::BaseController
   def logout
     if current_user
       current_user.update(authentication_token: nil)
-      head :no_content
+      head :ok
     else
       render json: { error: "Not authenticated" }, status: :unauthorized
     end

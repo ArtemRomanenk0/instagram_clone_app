@@ -1,15 +1,13 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  
   reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['localhost'],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:3000/api/:path*',
-      },
-    ];
+  // Если нужен assetPrefix, его можно указать здесь, но пока оставляем пустым
+  assetPrefix: '',
+  experimental: {
+    optimizeFonts: false
   }
+  
 };
+
+module.exports = nextConfig;

@@ -1,5 +1,6 @@
 class Api::V1::PostsController < Api::V1::BaseController
   def index
+    response.headers['Cache-Control'] = 'no-cache, no-store'
     posts = Post.includes(:user).order(created_at: :desc)
     render json: posts, each_serializer: PostSerializer
   end
@@ -36,6 +37,6 @@ def show
   private
 
   def post_params
-     params.permit(:text, :image, :user_id)
+     params.permit(:text, :image)
   end
 end

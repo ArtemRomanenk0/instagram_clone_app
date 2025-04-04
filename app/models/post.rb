@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
-mount_uploader :image, PostImageUploader
-validates :text, :image, presence: true
-belongs_to :user
-end 
-я
+    belongs_to :user
+    mount_uploader :image, ImageUploader
+    has_many :comments, dependent: :destroy
+    has_many :likes, dependent: :destroy
+    validates :text, presence: true # Совпадает с параметром из фронтенда
+  end

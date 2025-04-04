@@ -1,13 +1,17 @@
-FROM node:18-alpine
+FROM node:16-alpine
 
 WORKDIR /app
+
+# Устанавливаем зависимости
 COPY package*.json ./
 RUN npm install
+
+# Копируем исходники
 COPY . .
 
-ENV NEXT_PUBLIC_API_URL=http://localhost/api
-ENV NODE_ENV=production
-
+# Собираем приложение Next.js
 RUN npm run build
+
+EXPOSE 3000
 
 CMD ["npm", "start"]

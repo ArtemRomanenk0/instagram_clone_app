@@ -24,6 +24,14 @@ class Api::V1::UsersController < Api::V1::BaseController
   def me
     render json: current_user
   end
+
+  def follow_status
+    user = User.find(params[:id])
+    render json: { 
+      is_following: current_user.following?(user),
+      followers_count: user.followers.count
+    }
+  end
   
   def posts
     user = User.find(params[:id])
@@ -32,6 +40,8 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def follow
     user = User.find(params[:id])
+    return render json: { error: "Can't follow yourself" }, status: 422 if current_user.id == user.id
+
     current_user.follow(user)
     render json: { 
       message: "Подписка оформлена",

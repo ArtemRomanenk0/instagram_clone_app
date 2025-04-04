@@ -18,14 +18,19 @@ export default function Signup() {
   const [username, setUsername] = useState('')
   const router = useRouter()
 
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`, {
         user: { email, password, username }
       });
-      localStorage.setItem('token', res.data.token); // Сохраните токен
-      router.push('/feed') // Редирект на ленту
+      localStorage.setItem('authToken', res.data.token); // Сохраните токен
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      router.push('/feed')
+      router.refresh();
     } catch (error) {
       alert('Ошибка регистрации!');
     }

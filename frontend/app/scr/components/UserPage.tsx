@@ -20,11 +20,27 @@ interface User {
 }
 
 export default function UserPage() {
-  const { id } = useParams()
+  const params = useParams()
+  const id = Array.isArray(params.id) ? params.id[0] : params.id
   const [profile, setProfile] = useState<User | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Перенесем все хуки в верхний уровень
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const { data } = await api.get('/api/v1/users/me')
+        setCurrentUserId(data.id)
+      } catch (err) {
+        console.error('Error fetching current user:', err)
+      }
+    }
+    fetchCurrentUser()
+  }, [])
+
+  
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -38,8 +54,8 @@ export default function UserPage() {
         setLoading(false)
       }
     }
-    fetchUser()
-  }, [id])
+    if (id) fetchUser()
+  }, [id]) // Добавим id в зависимости
 
   const handleFollow = async () => {
     if (!profile) return
@@ -67,7 +83,7 @@ export default function UserPage() {
     </Box>
   )
 
-  if (!profile) return null // Явная проверка перед рендерингом
+  if (!profile) return null
 
   return (
     <Box p={4} maxW="800px" mx="auto">
@@ -81,13 +97,15 @@ export default function UserPage() {
         />
         <Box flex={1}>
           <Heading size="lg" mb={2}>{profile.username}</Heading>
-          <Button 
-            colorScheme={profile.is_following ? 'gray' : 'blue'}
-            onClick={handleFollow}
-            size="sm"
-          >
-            {profile.is_following ? 'Отписаться' : 'Подписаться'}
-          </Button>
+          {currentUserId && currentUserId !== profile.id && (
+            <Button 
+              colorScheme={profile.is_following ? 'gray' : 'blue'}
+              onClick={handleFollow}
+              size="sm"
+            >
+              {profile.is_following ? 'Отписаться' : 'Подписаться'}
+            </Button>
+          )}
         </Box>
       </Flex>
 

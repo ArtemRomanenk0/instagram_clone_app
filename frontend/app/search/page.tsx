@@ -1,32 +1,42 @@
+// app/search/page.tsx
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Box, Input, Button, VStack, Flex } from '@chakra-ui/react'
-import Feed from '../scr/components/Feed'
-
-
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Box, Input, Button, Flex, Heading } from '@chakra-ui/react'
+import Feed from '@/app/scr/components/Feed'
 
 export default function SearchPage() {
-  const [query, setQuery] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const [query, setQuery] = useState(searchParams.get('q') || '')
 
-  const handleSearch = () => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
     router.push(`/search?q=${encodeURIComponent(query)}`)
   }
 
   return (
     <Box p={4}>
-      <Flex mb={6}>
+      <Heading mb={6} textAlign="center">Поиск по постам</Heading>
+      
+      <Flex as="form" onSubmit={handleSearch} mb={6}>
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск по постам..."
+          placeholder="Введите поисковый запрос..."
           mr={2}
         />
-        <Button onClick={handleSearch}>Найти</Button>
+        <Button type="submit" colorScheme="blue">
+          Найти
+        </Button>
       </Flex>
 
-      <Feed endpoint={`/api/v1/posts/search?query=${query}`} />
+      {query && (
+        <Feed 
+        endpoint="/api/v1/posts/search" 
+        searchMode={true} // Добавьте это
+        />
+      )}
     </Box>
   )
 }

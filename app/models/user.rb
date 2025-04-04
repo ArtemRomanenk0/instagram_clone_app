@@ -31,7 +31,9 @@ class User < ApplicationRecord
   def regenerate_authentication_token!
     update(authentication_token: Devise.friendly_token)
   end
-
+  def avatar_url
+    avatar.url.presence || '/default_avatar.png'
+  end
   private
 
   def generate_authentication_token

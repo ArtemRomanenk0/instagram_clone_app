@@ -24,8 +24,9 @@ export default function Login() {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`, {
         user: { email, password }
       });
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('authToken', res.data.token);
       router.push('/feed')
+      router.refresh();
     } catch (error) {
       alert('Ошибка входа! Проверьте данные');
     }
