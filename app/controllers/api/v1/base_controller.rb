@@ -14,10 +14,15 @@ class Api::V1::BaseController < ActionController::API
   end
 
   def authenticate_user!
-    token = request.headers['Authorization']&.split('Bearer ')&.last
-    @current_user = User.find_by(authentication_token: token)
-    render json: { error: 'Unauthorized' }, status: 401 unless @current_user
+  token = request.headers['Authorization']&.split('Bearer ')&.last
+  @current_user = User.find_by(authentication_token: token)
+  
+  # Используйте только ОДИН ответ и return
+  unless @current_user
+    render json: { error: 'Unauthorized' }, status: :unauthorized
+    return
   end
+end
     def not_found
     render json: { error: "Not Found" }, status: :not_found
   end

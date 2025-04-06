@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       post 'users/:id/follow', to: 'users#follow'
     post 'users/:id/unfollow', to: 'users#unfollow'
     get 'posts/search', to: 'posts#search' # Добавлен
-
+   get '/uploads/*path', to: 'uploads#show'
     get 'users/:id/follow-status', to: 'users#follow_status'
       resources :posts, only: [:index, :show, :create, :update, :destroy] do
         collection do

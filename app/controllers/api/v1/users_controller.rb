@@ -22,8 +22,9 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def me
-    render json: current_user
-  end
+  return head :not_found unless current_user
+  render json: current_user
+end
 
   def follow_status
     user = User.find(params[:id])

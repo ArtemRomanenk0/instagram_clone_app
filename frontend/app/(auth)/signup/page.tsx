@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { 
-  Box, 
-  Button, 
-  Input, 
-  FormControl, 
+import {
+  Box,
+  Button,
+  Input,
+  FormControl,
   FormLabel,
   VStack
 } from '@chakra-ui/react'
@@ -18,19 +18,16 @@ export default function Signup() {
   const [username, setUsername] = useState('')
   const router = useRouter()
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`, {
         user: { email, password, username }
       });
+      console.log('Ответ сервера:', res.data);
       localStorage.setItem('authToken', res.data.token); // Сохраните токен
       await new Promise(resolve => setTimeout(resolve, 100));
-      
-      router.push('/feed')
-      router.refresh();
+      router.push('/login')
     } catch (error) {
       alert('Ошибка регистрации!');
     }
@@ -48,7 +45,7 @@ export default function Signup() {
               required
             />
           </FormControl>
-          
+
           <FormControl>
             <FormLabel>Email</FormLabel>
             <Input
@@ -58,7 +55,7 @@ export default function Signup() {
               required
             />
           </FormControl>
-          
+
           <FormControl>
             <FormLabel>Password</FormLabel>
             <Input
@@ -68,13 +65,13 @@ export default function Signup() {
               required
             />
           </FormControl>
-          
+
           <Button type="submit" colorScheme="brand" width="full">
             Sign Up
           </Button>
-          
-          <Button 
-            variant="link" 
+
+          <Button
+            variant="link"
             onClick={() => router.push('/login')}
           >
             Already have an account? Login

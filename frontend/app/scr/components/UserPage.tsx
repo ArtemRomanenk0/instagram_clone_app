@@ -89,12 +89,12 @@ export default function UserPage() {
     <Box p={4} maxW="800px" mx="auto">
       <Flex align="center" mb={8} gap={4}>
         <Avatar
-          src={profile.avatar_url}
+          src={profile.avatar_url || '/images/default-avatar.png'}
           name={profile.username}
           size="2xl"
           border="2px solid"
           borderColor="gray.200"
-        />
+        /> 
         <Box flex={1}>
           <Heading size="lg" mb={2}>{profile.username}</Heading>
           {currentUserId && currentUserId !== profile.id && (

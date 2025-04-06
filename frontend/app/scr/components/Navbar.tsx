@@ -33,6 +33,13 @@ export default function Navbar() {
       <Link as={NextLink} href="/feed" fontWeight="bold" fontSize="xl">
         Instagram Clone
       </Link>
+      <Button 
+        as={NextLink} 
+        href="/search" 
+        colorScheme="brand"
+      >
+        Search
+      </Button>
       <Spacer />
       {isLoggedIn ? (
         <Button 

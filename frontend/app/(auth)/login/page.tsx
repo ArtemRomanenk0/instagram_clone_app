@@ -26,7 +26,6 @@ export default function Login() {
       });
       localStorage.setItem('authToken', res.data.token);
       router.push('/feed')
-      router.refresh();
     } catch (error) {
       alert('Ошибка входа! Проверьте данные');
     }

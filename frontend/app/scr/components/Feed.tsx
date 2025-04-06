@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { Box, VStack, Text, Image, Spinner, Flex, Avatar, Button } from '@chakra-ui/react'
 import api from '../lib/api'
 import { useRouter } from 'next/navigation'
+import { motion } from "framer-motion";
+import SearchPage from '@/app/search/page'
 
 interface User {
   id: string
@@ -61,32 +63,14 @@ export default function Feed({
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const { data } = await api.get('/api/v1/users/me', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-        setCurrentUserId(data.id);
+        const { data } = await api.get('/api/v1/users/me')
+        setCurrentUserId(data.id)
       } catch (err) {
-        console.error('Error fetching current user:', err);
+        console.error('Error fetching current user:', err)
       }
-    };
-    fetchCurrentUser();
-  }, []);useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const { data } = await api.get('/api/v1/users/me', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-        setCurrentUserId(data.id);
-      } catch (err) {
-        console.error('Error fetching current user:', err);
-      }
-    };
-    fetchCurrentUser();
-  }, []);
+    }
+    fetchCurrentUser()
+  }, [])
 
   if (loading) return <Spinner size="xl" thickness="4px" color="blue.500" />
   if (error) return <Text color="red.500">{error}</Text>
@@ -150,9 +134,23 @@ export default function Feed({
 
   return (
     <VStack spacing={6} w="100%">
-    
+      <SearchPage/>
+
       {posts.map(post => (
-        <Box key={post.id} w="100%" borderWidth="1px" borderRadius="lg" p={4}>
+        <motion.div
+        key={post.id} 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Box   key={post.id} 
+        w="100%" 
+        borderWidth="1px" 
+        borderRadius="lg" 
+        p={4}
+        boxShadow="md"
+        bg="whiteAlpha.900"     
+        >
           <Flex align="center" mb={4} justify="space-between">
             <Flex
               align="center"
@@ -160,7 +158,7 @@ export default function Feed({
               onClick={() => router.push(`/users/${encodeURIComponent(post.user.id)}`)}
             >
               <Avatar
-                src={post.user?.avatar_url || '/default-avatar.png'}
+                src={post.user?.avatar_url || '/images/default-avatar.png'}
                 name={post.user?.username}
                 size="sm"
                 mr={2}
@@ -168,6 +166,7 @@ export default function Feed({
               <Text fontWeight="bold">{post.user?.username}</Text>
 
             </Flex>
+            
             {showFollowButton &&
               post.user?.id !== currentUserId &&
               !post.user?.is_following && (
@@ -195,22 +194,42 @@ export default function Feed({
               )}
           </Flex>
 
-          <Text mb={4}>{post.text}</Text>
 
+          <Box mb={4}>
           {post.image_url && (
-            <Image
-              src={post.image_url}
-              alt="Post image"
-              borderRadius="md"
-              maxH="400px"
-              objectFit="contain"
-              w="100%"
-              fallbackSrc="/image-placeholder.png"
-            />
-          )}
+  <Box position="relative">
+    <Image
+      src={post.image_url}
+      alt="Post image"
+      borderRadius="md"
+      maxH="400px"
+      w="100%"
+      objectFit="cover" // Измените с "contain" на "cover" для обрезки
+      sx={{
+        aspectRatio: "1/1",
+        backgroundColor: "blackAlpha.100",
+      }}
+      fallbackSrc="/images/placeholder.png"
+    />
+    {/* Градиентный оверлей (опционально) */}
+    <Box
+      position="absolute"
+      bottom="0"
+      w="100%"
+      h="30%"
+      bgGradient="linear(to-t, blackAlpha.600, transparent)"
+    />
+  </Box>
+)}
+    <Text mt={4} fontSize="md" color="gray.700">
+      {post.text}
+    </Text>
+  </Box>
+
         </Box>
+</motion.div>
       ))}
-   
-   </VStack>
+
+    </VStack>
   )
 }

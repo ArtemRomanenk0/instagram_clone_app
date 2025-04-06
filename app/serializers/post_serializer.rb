@@ -4,10 +4,20 @@ class PostSerializer < ActiveModel::Serializer
   belongs_to :user, serializer: UserSerializer
 
   
-  def image_url
-    object.image.url.presence || '/placeholder.png'
+ # post_serializer.rb
+ def image_url
+  if object.image.present?
+    # Используйте идентификатор файла вместо filename
+    "/uploads/post/image/#{object.id}/#{object.image_identifier}"
+  else
+    "/images/placeholder.png"
   end
+end
 
+def avatar_url
+  # Убедитесь, что путь ведет к существующему файлу
+  object.user.avatar_url.presence || "/images/default_avatar.png"
+end
   def comments_count
     object.comments.count
   end
