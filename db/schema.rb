@@ -71,6 +71,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_04_214109) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+
+create_table "likes", force: :cascade do |t|
+  t.bigint "user_id", null: false
+  t.bigint "post_id", null: false
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+  t.index ["post_id"], name: "index_likes_on_post_id"
+  t.index ["user_id", "post_id"], name: "index_likes_on_user_id_and_post_id", unique: true
+  t.index ["user_id"], name: "index_likes_on_user_id"
+end
+
+create_table "comments", force: :cascade do |t|
+  t.text "text", null: false
+  t.bigint "user_id", null: false
+  t.bigint "post_id", null: false
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+  t.index ["post_id"], name: "index_comments_on_post_id"
+  t.index ["user_id"], name: "index_comments_on_user_id"
+end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "posts", "users"

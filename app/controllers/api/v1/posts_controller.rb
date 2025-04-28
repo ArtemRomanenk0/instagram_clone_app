@@ -1,11 +1,16 @@
 class Api::V1::PostsController < Api::V1::BaseController
   def index
-    posts = current_user.feed_posts.order(created_at: :desc)
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    posts = Post.includes(:user, :comments, :likes).order(created_at: :desc)
     render json: posts, each_serializer: PostSerializer
   end
-def search
-    @posts = Post.where("text LIKE ?", "%#{params[:query]}%")
-    render json: @posts
+
+  def search
+    posts = Post.where("text LIKE ?", "%#{params[:query]}%")
+               .includes(:user)
+               .order(created_at: :desc)
+    
+    render json: posts, each_serializer: PostSerializer
   end
 def show
     post = Post.find(params[:id])
@@ -33,6 +38,6 @@ def show
   private
 
   def post_params
-     params.permit(:text, :image, :user_id)
+     params.permit(:text, :image)
   end
 end

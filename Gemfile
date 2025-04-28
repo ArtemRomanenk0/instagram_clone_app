@@ -20,7 +20,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-
+gem 'image_processing'
 gem 'devise'
 gem 'devise-jwt'
 

@@ -436,6 +436,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  image_processing
   importmap-rails
   jbuilder
   kamal

@@ -1,33 +1,40 @@
 Rails.application.routes.draw do
- # Web routes
+  
   devise_for :users
   resources :posts
   resources :users, only: [:show] do
     resources :subscriptions, only: [:create, :destroy]
   end
   get '/search', to: 'search#posts', as: :search_posts
+  get '/favicon.ico', to: proc { [204, {}, []] }
   root 'posts#index'
 
-  # API routes
+ 
   namespace :api do
     namespace :v1 do
-      # Authentication
-      post '/login', to: 'auth#login'
+      post '/auth/login', to: 'auth#login'
       delete '/logout', to: 'auth#logout'
-
-      # Posts with search
+      post '/auth/signup', to: 'registrations#create'
+      get 'users/me', to: 'users#me'
+      get 'users/:id/posts', to: 'users#posts'
+      post 'users/:id/follow', to: 'users#follow'
+    post 'users/:id/unfollow', to: 'users#unfollow'
+    get 'posts/search', to: 'posts#search' 
+       get 'search/posts', to: 'search#posts'
+   get '/uploads/*path', to: 'uploads#show'
+    get 'users/:id/follow-status', to: 'users#follow_status'
       resources :posts, only: [:index, :show, :create, :update, :destroy] do
+        resources :likes, only: [:create, :destroy]
+        resources :comments, only: [:index, :create]
         collection do
-           get :search
-          end
+          get :search
+        end
       end
 
-      # Users with follow/unfollow
-      resources :users, only: [:index, :show] do
-        member do
-          post :follow
-          delete :unfollow
-        end
+      resources :users do
+        post :follow, on: :member
+        post :unfollow, on: :member
+        get :posts, on: :member
       end
     end
   end
