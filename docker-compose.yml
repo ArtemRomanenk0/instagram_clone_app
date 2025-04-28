@@ -4,7 +4,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
+      - "80:80"  
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./public:/app/public 
@@ -21,6 +21,8 @@ services:
       MYSQL_DATABASE: instagram_clone_development 
       MYSQL_USER: app
       MYSQL_PASSWORD: app_password
+    ports:
+      - "3307:3306"
     networks:
       - app-network
     healthcheck:
@@ -56,7 +58,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost # Через Nginx
+      NEXT_PUBLIC_API_URL: http://localhost 
       NODE_ENV: production
     networks:
       - app-network

@@ -1,5 +1,5 @@
 class Api::V1::BaseController < ActionController::API
-  respond_to :json # Явно указываем формат ответов
+  respond_to :json 
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   
@@ -17,7 +17,7 @@ class Api::V1::BaseController < ActionController::API
   token = request.headers['Authorization']&.split('Bearer ')&.last
   @current_user = User.find_by(authentication_token: token)
   
-  # Используйте только ОДИН ответ и return
+ 
   unless @current_user
     render json: { error: 'Unauthorized' }, status: :unauthorized
     return

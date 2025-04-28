@@ -1,36 +1,47 @@
-// app/user/[id]/page.tsx
+
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Box, Button, Heading, Spinner } from '@chakra-ui/react'
-import UserPage from '../../scr/components/UserPage'
-
+import { useStore } from '@/app/scr/lib/store/RootStore'
+import UsersPage from '../page'
+import NextLink from 'next/link'
 
 export default function ProfilePage() {
-  const { id } = useParams()
-  const [isMounted, setIsMounted] = useState(false)
-  const router = useRouter()
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  const { id } = useParams();
+  const { authStore } = useStore();
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!isMounted) return <Spinner />
+  useEffect(() => {
+    const loadData = async () => {
+      await authStore.fetchCurrentUser();
+      await authStore.fetchViewedUser(id.toString());
+      setIsLoading(false);
+    };
+    loadData();
+  }, [id]);
+
+  if (isLoading) return <Spinner />;
+
+  const isMyProfile = authStore.currentUser?.id.toString() === id.toString();
+  const username = authStore.viewedUser?.username || "";
 
   return (
     <Box p={4}>
       <Button
-        ml={3}
-        size="xs"
-        colorScheme="blue"
-        onClick={() => router.push('/feed')}
+        as={NextLink}
+        href="/feed"
+        colorScheme="brand"
       >
-
-        назад
+        Назад
       </Button>
+      <Heading mb={6}>
+        {isMyProfile
+          ? 'Мой аккаунт'
+          : `Профиль ${username}`}
+      </Heading>
 
-
-      <Heading mb={6}>Профиль пользователя</Heading>
-      <UserPage />
+      <UsersPage />
     </Box>
   )
 }

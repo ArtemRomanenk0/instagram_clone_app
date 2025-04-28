@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-   # Web routes
+  
   devise_for :users
   resources :posts
   resources :users, only: [:show] do
@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get '/favicon.ico', to: proc { [204, {}, []] }
   root 'posts#index'
 
-  # API routes
+ 
   namespace :api do
     namespace :v1 do
       post '/auth/login', to: 'auth#login'
@@ -19,10 +19,13 @@ Rails.application.routes.draw do
       get 'users/:id/posts', to: 'users#posts'
       post 'users/:id/follow', to: 'users#follow'
     post 'users/:id/unfollow', to: 'users#unfollow'
-    get 'posts/search', to: 'posts#search' # Добавлен
+    get 'posts/search', to: 'posts#search' 
+       get 'search/posts', to: 'search#posts'
    get '/uploads/*path', to: 'uploads#show'
     get 'users/:id/follow-status', to: 'users#follow_status'
       resources :posts, only: [:index, :show, :create, :update, :destroy] do
+        resources :likes, only: [:create, :destroy]
+        resources :comments, only: [:index, :create]
         collection do
           get :search
         end

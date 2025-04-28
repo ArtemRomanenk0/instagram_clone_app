@@ -20,7 +20,7 @@ module InstagramClone
         origins 'http://localhost:3001' # Next.js dev server
         resource '*',
           headers: :any,
-          methods: [:get, :post, :put, :delete, :options],
+          methods: [:get, :post, :put, :delete, :options, :head],
           credentials: true
       end
     end

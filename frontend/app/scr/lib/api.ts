@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
  });
 
-// Добавляем токен в заголовки автоматически
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
   if (token) {
@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Обработка 401 ошибки
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {

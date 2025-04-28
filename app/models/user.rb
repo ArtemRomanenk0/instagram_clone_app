@@ -6,11 +6,19 @@ class User < ApplicationRecord
 
   validates :username, presence: true, uniqueness: true
   before_create :generate_authentication_token
-
+  has_many :likes, dependent: :destroy
+  has_many :comments, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_many :subscriptions, foreign_key: :follower_id, dependent: :destroy
   has_many :followed_users, through: :subscriptions, source: :following
-  has_many :followers, through: :subscriptions, source: :follower
+  has_many :inverse_subscriptions, 
+         class_name: 'Subscription', 
+         foreign_key: :following_id, 
+         dependent: :destroy
+
+has_many :followers, 
+         through: :inverse_subscriptions, 
+         source: :follower
 
   def feed_posts
     Post.where(user_id: followed_user_ids + [id]).order(created_at: :desc)

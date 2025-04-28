@@ -5,7 +5,7 @@ class PostImageUploader < CarrierWave::Uploader::Base
 
   process resize_to_limit: [800, 800]
   def base_url
-    "http://localhost" # Замените на ваш домен в production
+    "http://localhost" 
   end
   
 
@@ -16,7 +16,7 @@ class PostImageUploader < CarrierWave::Uploader::Base
   
   def image_url
     if object.image.present?
-      # Уберите 'public' из пути
+  
       "/uploads/post/image/#{object.id}/#{object.image_identifier}"
     else
       "/placeholder.png"

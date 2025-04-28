@@ -36,7 +36,7 @@
     ".next/types/**/*.ts",
     "next.config.js",
     "out/types/**/*.ts"
-  ],
+, "app/scr/store/searchShow/actions,ts", "app/users/[id]/UpdateUserData.store"  ],
   "exclude": [
     "node_modules"
   ]

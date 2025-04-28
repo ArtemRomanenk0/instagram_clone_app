@@ -5,13 +5,13 @@ class Api::V1::UsersController < Api::V1::BaseController
     users = User.where.not(id: current_user.id)
     render json: users, 
            each_serializer: UserSerializer,
-           current_user: current_user # Ключевое исправление!
+           current_user: current_user 
   end
 
   def show
     user = User.includes(:posts).find(params[:id])
     render json: {
-      user: UserSerializer.new(user),
+      user: UserSerializer.new(user, scope: current_user),
       posts: ActiveModel::Serializer::CollectionSerializer.new(
         user.posts.order(created_at: :desc), 
         serializer: PostSerializer
@@ -39,29 +39,34 @@ end
     render json: user.posts
   end
 
-  def follow
-    user = User.find(params[:id])
-    return render json: { error: "Can't follow yourself" }, status: 422 if current_user.id == user.id
 
-    current_user.follow(user)
-    render json: { 
-      message: "Подписка оформлена",
-      is_following: true,
-      followers_count: user.followers.count
-    }
-  end
+def follow
+target_user = User.find(params[:id])
+current_user.follow(target_user)
+target_user.reload
 
-  def unfollow
-    user = User.find(params[:id])
-    current_user.unfollow(user)
-    render json: { 
-      message: "Подписка отменена",
-      is_following: false,
-      followers_count: user.followers.count
-    }
-  end
+render json: {
+  target_user: UserSerializer.new(target_user, scope: current_user)
+}
+end
 
-  private
+def unfollow
+target_user = User.find(params[:id])
+current_user.unfollow(target_user)
+target_user.reload
+
+render json: {
+  target_user: UserSerializer.new(target_user, scope: current_user)
+}
+end
+
+
+
+private
+
+def render_forbidden(message)
+  render json: { error: message }, status: :forbidden
+end
 
   def user_params
     params.require(:user).permit(:username, :email, :avatar)

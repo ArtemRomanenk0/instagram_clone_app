@@ -1,9 +1,10 @@
 class Api::V1::PostsController < Api::V1::BaseController
   def index
     response.headers['Cache-Control'] = 'no-cache, no-store'
-    posts = Post.includes(:user).order(created_at: :desc)
+    posts = Post.includes(:user, :comments, :likes).order(created_at: :desc)
     render json: posts, each_serializer: PostSerializer
   end
+
   def search
     posts = Post.where("text LIKE ?", "%#{params[:query]}%")
                .includes(:user)
