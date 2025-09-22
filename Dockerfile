@@ -1,13 +1,12 @@
 FROM ruby:3.3
 
-
 RUN apt-get update -qq && apt-get install -y \
-    nodejs \
-    yarn \
+    nodejs npm\
     mariadb-client \
     libmariadb-dev \
     iputils-ping 
 
+RUN npm install -g yarn
 
 RUN useradd -m -s /bin/bash app
 WORKDIR /app
