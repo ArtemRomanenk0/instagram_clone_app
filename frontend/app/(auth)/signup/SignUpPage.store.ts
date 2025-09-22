@@ -35,6 +35,9 @@ export class SignUpPageStore {
         const username = this.username;
 
         try {
+        
+            console.log('Full URL:', `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`); //debug_only
+            
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
                 { user: { email: this.email, password: this.password, username: this.username } }
             );

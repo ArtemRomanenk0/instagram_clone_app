@@ -23,6 +23,13 @@ module InstagramClone
           methods: [:get, :post, :put, :delete, :options, :head],
           credentials: true
       end
+    end  
+    
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
+        allow do
+            origins '*'
+            resource '*', :headers => :any, :methods => [:get, :post, :options]
+        end
     end
     # Configuration for the application, engines, and railties goes here.
     #

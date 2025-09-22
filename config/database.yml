@@ -2,10 +2,10 @@
 default: &default
   adapter: mysql2
   encoding: utf8mb4
-  host: db 
+  host: db
   username: app
   password: app_password
-  database: instagram_clone_development 
+  database: instagram_clone_development
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   port: 3306
 

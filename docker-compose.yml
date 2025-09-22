@@ -18,7 +18,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: instagram_clone_development 
+      MYSQL_DATABASE: instagram_clone_development
       MYSQL_USER: app
       MYSQL_PASSWORD: app_password
     ports:
@@ -30,8 +30,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10   
-    volumes:
-      - mysql_data:/var/lib/mysql 
+    #volumes:
+    #  - mysql_data:/var/lib/mysql 
 
   web:
     build: 
@@ -68,6 +68,3 @@ services:
 networks:
   app-network:  
     driver: bridge
-
-volumes:
-  mysql_data:

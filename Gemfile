@@ -8,7 +8,7 @@ gem "propshaft"
 gem "mysql2", "~> 0.5"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-gem 'rack-cors'
+gem 'rack-cors', '~> 0.3.1'
 gem 'active_model_serializers'
 
 gem 'rack-attack'
